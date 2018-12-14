@@ -74,44 +74,44 @@ predict_next10<-function(my_phrase){
                   temp_probs <- select(filter(indices9, index1 == my_indices[my_len-7], index2 == my_indices[my_len-6], index3 == my_indices[my_len-5],
                                               index4 == my_indices[my_len-4], index5 == my_indices[my_len-3], index6 == my_indices[my_len-2], 
                                               index7 == my_indices[my_len-1], index8 == my_indices[my_len]), index = index9, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.9
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             if(my_len>6){
                   temp_probs <- select(filter(indices8, index1 == my_indices[my_len-6], index2 == my_indices[my_len-5], index3 == my_indices[my_len-4],
                                               index4 == my_indices[my_len-3], index5 == my_indices[my_len-2], index6 == my_indices[my_len-1], 
                                               index7 == my_indices[my_len]), index = index8, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.8
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             if(my_len>5){
                   temp_probs <- select(filter(indices7, index1 == my_indices[my_len-5], index2 == my_indices[my_len-4], index3 == my_indices[my_len-3],
                                               index4 == my_indices[my_len-2], index5 == my_indices[my_len-1], index6 == my_indices[my_len]), index = index7, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.7
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             if(my_len>4){
                   temp_probs <- select(filter(indices6, index1 == my_indices[my_len-4], index2 == my_indices[my_len-3], index3 == my_indices[my_len-2],
                                               index4 == my_indices[my_len-1], index5 == my_indices[my_len]), index = index6, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.6
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             if(my_len>3){
                   temp_probs <- select(filter(indices5, index1 == my_indices[my_len-3], index2 == my_indices[my_len-2], index3 == my_indices[my_len-1],
                                               index4 == my_indices[my_len]), index = index5, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.8
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.5
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             if(my_len>2){
                   temp_probs <- select(filter(indices4, index1 == my_indices[my_len-2], index2 == my_indices[my_len-1], index3 == my_indices[my_len]),
                                        index = index4, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.6
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.4
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             if(my_len>1){
                   temp_probs <- select(filter(indices3, index1 == my_indices[my_len-1], index2 == my_indices[my_len]),
                                        index = index3, docfreq)
-                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.4
+                  temp_probs$prob <- temp_probs$docfreq/sum(temp_probs$docfreq)*.3
                   curr_probs<-rbind(curr_probs, select(temp_probs,index,prob))
             }
             temp_probs <- select(filter(indices2, index1 == my_indices[my_len]), index = index2, docfreq)
