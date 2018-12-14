@@ -1,0 +1,72 @@
+---
+title: "Capstone Exploratory Analysis"
+author: "Brian Stroh"
+date: "December 8, 2018"
+output: html_document
+---
+
+##Overview
+The goal of this project is to get a feel for the data that we will be working with that we will use to predict future text.
+
+##Load in Selected Libraries
+```{r setup, warning=FALSE, message=FALSE}
+library(quanteda)
+library(readtext)
+library(RColorBrewer)
+library(ggplot2)
+library(plotly)
+
+download.file("https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip", "langdata.zip")
+```
+
+##Read in Applicable Data
+```{r loadData}
+unzip("langdata.zip")
+twitter<-readtext("final/en_US/en_US.twitter.txt")
+news<-readtext("final/en_US/en_US.news.txt")
+blog<-readtext("final/en_US/en_US.blogs.txt")
+my_text<-rbind(twitter,rbind(news, blog))
+my_corpus<-corpus(my_text)
+summary(my_corpus)
+```
+
+As we can see, the data that we are working with is gigantic. We will have be careful and deliberate when building our model. Now that we have our initial data, we'll want to remove any non-english words and symbols as well as any stopwords that would inhibit our predictions.
+
+##Clean the Data
+```{r cleanData}
+my_tokens<-tokens(my_corpus, remove_numbers = TRUE, remove_punct = TRUE,
+                  remove_symbols = TRUE, remove_separators = TRUE,
+                  remove_twitter = TRUE, remove_hyphens = TRUE, remove_url = FALSE)
+my_tokens<-tokens_remove(my_tokens,stopwords('en'), padding = FALSE)
+my_tokens<-tokens_select(my_tokens, min_nchar = 2, padding  = FALSE)
+
+my_dfm<-dfm(my_tokens)
+```
+
+Now that we have tokenized the text, there are many more things we can do with the data. Most importantly, we can now conduct frequency analysis. This will be the basis for our model's prediction algorithm later.
+
+##Most Frequent (non-stop) Words
+```{r quickSummary}
+my_freq<-select(textstat_frequency(my_dfm),feature, frequency)
+freq<-ggplot(data = my_freq[1:15,], aes(x = feature, y = frequency)) +
+      geom_col()
+ggplotly(freq)
+```
+
+##Alternative Frequency Analysis
+```{r wordCloud, warning=FALSE, message= FALSE}
+textplot_wordcloud(my_dfm, random_order = TRUE, color = brewer.pal(8,"Accent"))
+```
+
+##Next Steps
+Next we will build 1,2,3,4 and 5 ngrams from our tokens. We will aggregate the frequencies of these ngrams and use these aggregations as our base tables for prediction. Depending on the length of the phrases, we will filter down our 1,2,3,4 and 5 ngram tables based on previous words in a phrase, and calculate the probabilities of the next word based on the proportion of that word occurring next in our ngrams. Ideally, we could use a well-defined prediction model already implemented in R so that we know that our model is robust.
+
+##Credits
+This analysis was conducted using the quanteda (Quantitative Analysis of Textual Data) package:
+
+* Benoit K, Watanabe K, Wang H, Nulty P, Obeng A, Müller S, Matsuo A (2018). "quanteda: An R package for the quantitative analysis of textual data." Journal of Open Source Software, 3(30), 774. doi: 10.21105/joss.00774, https://quanteda.io.  
+
+Additional packages used:
+
+* Plotly Technologies Inc. Collaborative data science. Montréal, QC, 2015. https://plot.ly.  
+* H. Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016.  
