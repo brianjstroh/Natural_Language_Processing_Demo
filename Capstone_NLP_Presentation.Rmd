@@ -1,0 +1,53 @@
+---
+title: "Capstone NLP Presentation"
+author: "Brian Stroh"
+date: "December 13, 2018"
+output: ioslides_presentation
+---
+
+## Predict Next Word App Overview
+![](AppDemo.png)  
+  
+A user types a word or expression into the 'Input Phrase' text box.  
+Then the user can adjust the input slider to change the number of word recommendations displayed.
+
+## The Data Structures
+
+10-grams on down to 1-grams were created and aggregated using the quanteda package.  
+  
+Other than the 1-gram, all n-gram dataframes were sized down to frequencies >= 3.  
+  
+This helped to reduce model size significantly.  
+  
+The 1 gram data frame was given an index column.  
+  
+To further reduce model size, the n-gram dataframes had all of their character vectors replaced by their corresponding 1-gram indices.  
+  
+
+## The Algorithm: Part 1
+
+The input phrase is first stripped of any punctuation, set to all lower-case, and has all contractions converted to full words.
+  
+The phrase is then split apart into a vector of individual words.
+  
+A custom function creates a vector that contains just the corresponding indices of these words from the 1-gram dataframe.  
+  
+The Model: This app takes a basic layered n-gram approach to predict the next word(s).  
+  
+N-gram dataframes are filtered to match preceding inidices to the exact indices from the input phrase.
+  
+The last index column from each of these filtered dataframes is assigned a weight equal to frequency of that index within the filtered dataframe divided by the sum of all filtered frequencies.
+
+## The Algorithm: Part 2
+  
+These indices and their weights are calculated for each n-gram, discounted depending on n of the n gram and combined into a penultimate dataframe.
+  
+The 10-gram weights are not discounted, but the 9-gram weights are mulitplied by .9, the 8-gram weights are mulitplied by .8, and so on.
+  
+This dataframe is then sorted in order of decreasing weight, and then duplicate indices are removed.
+  
+A custom function then converts the vector of indices back to a vector of words from the 1-gram dataframe.
+  
+Lastly, the first few most frequent words from the 1-gram dataframe are added to the end of the ultimate vector just to fill in any potential empty results that would result from infrequent input phrases.
+
+
