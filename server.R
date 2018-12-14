@@ -11,8 +11,6 @@ library(shiny)
 
 source("Predict_Next.R")
 
-
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
       
       hide(id = "loading-content", anim = TRUE, animType = "fade")    
